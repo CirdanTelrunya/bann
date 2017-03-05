@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
 from flask import render_template, request, redirect, flash,url_for
 from app.models.bann import Enfant, Contrat
 from app import app, db
@@ -25,3 +26,18 @@ def new():
     else:
         return render_template(
             'new-child.html')
+    
+@app.route('/test', methods=['GET', 'POST'])
+def test_date():
+    if request.method == 'POST':
+        
+        date_debut = datetime.strptime(request.form['debut'], '%H:%M')
+        date_fin = datetime.strptime(request.form['fin'], '%H:%M')
+        result = date_fin - date_debut
+        hours, remainder = divmod(result.total_seconds(), 3600)
+        minutes, seconds = divmod(remainder, 60)
+        
+        return '<h1>Hello World</h1><br />'+str(int(hours))+':'+str(int(minutes))
+    else:
+        return render_template(
+            'test.html')

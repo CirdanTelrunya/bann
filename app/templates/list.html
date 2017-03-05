@@ -1,49 +1,69 @@
 {% extends 'layout.html' %}
 {% from 'macros.html' import icon %}
 {% block content %}
-    <div class="row">
-        <div class="col-md-3">
-            <h3 class="lead">Category</h3>
-            <div id="rounded">
-            <table id="category-table" class="table" style="table-layout: fixed">
-               {%- for category in categories %}
-                    <tr>
-                        <td>
-                            <a href="{{ url_for('list_todos', name=category.name) }}">{{ category.name }}</a>
-                        </td>
-                        <td>
-                            <a  class="btn btn-sm btn-default" href="{{ url_for('edit_category', category_id=category.id) }}">{{ icon('edit') }} Edit</a>
-                        </td>
-                        <td>
-                            <form id="catdel-{{ category.name }}" action="{{ url_for('delete_category', category_id=category.id) }}" method="post">
-                                <a class="btn btn-sm btn-danger" onclick="$('#catdel-{{ category.name }}').submit();">{{ icon('trash') }} Delete</a>
-                            </form>
-                        </td>
-                    </tr>
-                {%- endfor %}
-            </table>
-        </div>
-        </div>
-        <div class="col-md-9">
-            {% if enfants|count > 0 %}
-            <h3 class="lead">Enfants</h3>
-            <table id="todo-table" class="table">
-               <tr>
-                    <th>#</th>
-                    <th>Prénom</th>
-                    <th>Nom</th>
-                </tr>
-                {%- for enfant in enfants %}
-                    <tr>
-                        <td> {{ loop.index }} </td>
-                        <td>{{ enfant.prenom }}</td>
-                        <td>{{ enfant.nom }}</td>                        
-                    </tr>
-                {%- endfor %}
-            </table>
-            {% else %}
-            <h3 class=lead>No Todos Yet</h3>
-            {% endif %}
-        </div>
+<div class="row">
+  <div class="col-md-3">
+    <h3 class="lead">Category</h3>
+    <div id="rounded">
+      <table id="category-table" class="table" style="table-layout: fixed">
+        {%- for category in categories %}
+        <tr>
+          <td>
+            <a href="{{ url_for('list_todos', name=category.name) }}">{{ category.name }}</a>
+          </td>
+          <td>
+            <a  class="btn btn-sm btn-default" href="{{ url_for('edit_category', category_id=category.id) }}">{{ icon('edit') }} Edit</a>
+          </td>
+          <td>
+            <form id="catdel-{{ category.name }}" action="{{ url_for('delete_category', category_id=category.id) }}" method="post">
+              <a class="btn btn-sm btn-danger" onclick="$('#catdel-{{ category.name }}').submit();">{{ icon('trash') }} Delete</a>
+            </form>
+          </td>
+        </tr>
+        {%- endfor %}
+      </table>
     </div>
+  </div>
+  <div class="col-md-9">
+    {% if enfants|count > 0 %}
+    <h3 class="lead">Enfants</h3>
+    <table id="todo-table" class="table">
+      <tr>
+        <th>#</th>
+        <th>Prénom</th>
+        <th>Nom</th>
+      </tr>
+      {%- for enfant in enfants %}
+      <tr>
+        <td> {{ loop.index }} </td>
+        <td>{{ enfant.prenom }}</td>
+        <td>{{ enfant.nom }}</td>                        
+      </tr>
+      {%- endfor %}
+    </table>
+    {% else %}
+    <h3 class=lead>No Todos Yet</h3>
+    {% endif %}
+    <div class="container">
+      <div class="row">
+        <div class='col-sm-6'>
+          <div class="form-group">
+            <div class='input-group date' id='datetimepicker1'>
+              <input type='text' class="form-control" />
+              <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <script type="text/javascript">
+    	  $(function () {
+	      $('#datetimepicker1').datetimepicker();
+	  });
+	</script>
+      </div>
+    </div>
+  </div>
+  
+</div>
 {% endblock %}
