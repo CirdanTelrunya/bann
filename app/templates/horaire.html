@@ -1,0 +1,15 @@
+{% extends 'layout.html' %}
+{% from 'macros.html' import icon %}
+{% block content %}
+<div class="row">
+  <form action="" method=post>
+    {%- for horaire in horaires %}
+    <input type="text" name="horaire[]" value="{{horaire}}" /><br/>
+    {%- endfor %}
+    <input type="text" id="new_horaire" name="new_horaire" />
+    <button type="submit" class="btn btn-success" name="submit" value="add">Ajouter</button>
+    <br/>
+     <button type="submit" class="btn btn-success" name="submit" value="record">Enregistrer</button>
+  </form>
+</div>
+{% endblock %}

@@ -39,5 +39,19 @@ def test_date():
         
         return '<h1>Hello World</h1><br />'+str(int(hours))+':'+str(int(minutes))
     else:
-        return render_template(
-            'test.html')
+        return render_template('test.html')
+
+@app.route('/horaire', methods=['GET', 'POST'])
+def test_horaire():
+    
+    if request.method == 'POST':
+        if request.form['submit'] == 'add':
+            horaires = []
+            for horaire in request.form.getlist('horaire[]'):
+                horaires.append(str(horaire))
+            horaires.append(request.form['new_horaire'])
+            return render_template('horaire.html', horaires = horaires)
+        else:
+            return '<h1>Hello World</h1><br />'+request.form['submit']
+    else:
+        return render_template('horaire.html')
