@@ -1,32 +1,33 @@
 {% extends "layout.html" %}
 {% block content %}
-<form action="" method=post class="form-inline">
-  <h2>Ajout d'un enfant</h2>
-  <input type="text" 
-         id="prenom" 
-         name="prenom" 
-         maxlength="60" 
-         class="form-control input-xlarge"
-         placeholder="Prénom de l'enfant" 
-         required
-         />    
-  <input type="text"
-         id="nom" 
-         name="nom" 
-         maxlength="60" 
-         class="form-control input-xlarge"
-         placeholder="Nom de l'enfant" 
-         required
-         />
-  
-  
-  
-  <hr>
-  <div class="control-group">
-    <div class="controls">
-      <button type="submit" class="btn btn-success">Enregistrer</button>
-    </div>
+<div class="row">
+  <div class="col-xs-12">
+    <form action="" method=post class="form-inline">
+      <h2>Ajout d'un enfant</h2>
+      <input type="text" 
+             id="prenom" 
+             name="prenom" 
+             maxlength="60" 
+             class="form-control input-xlarge"
+             placeholder="Prénom de l'enfant" 
+             required
+             />    
+      <input type="text"
+             id="nom" 
+             name="nom" 
+             maxlength="60" 
+             class="form-control input-xlarge"
+             placeholder="Nom de l'enfant" 
+             required
+             />    
+      <hr>
+      <div class="control-group">
+	<div class="controls">
+	  <button type="submit" class="btn btn-success">Enregistrer</button>
+	</div>
+      </div>
+      
+    </form>
   </div>
-  
-</form>
+</div>
 {% endblock %}

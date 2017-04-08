@@ -1,15 +1,61 @@
 {% extends 'layout.html' %}
 {% from 'macros.html' import icon %}
 {% block content %}
+
 <div class="row">
-  <form action="" method=post>
-    {%- for horaire in horaires %}
-    <input type="text" name="horaire[]" value="{{horaire}}" /><br/>
-    {%- endfor %}
-    <input type="text" id="new_horaire" name="new_horaire" />
-    <button type="submit" class="btn btn-success" name="submit" value="add">Ajouter</button>
+  <form action="" method=post class="form-inline">
+    <div class="container">
+      {%- for horaire in horaires %}
+      <div class="row">
+	<div class="form-group">
+	  <input type="text" value="{{days_week[horaire[0]]}}" class="form-control" readonly />
+	  <input type="hidden" name="jours[]" value="{{horaire[0]}}" readonly />
+	  <input type="text" name="debuts[]" value="{{horaire[1].strftime('%H:%M')}}" class="form-control" />
+	  <input type="text" name="fins[]" value="{{horaire[2].strftime('%H:%M')}}" class="form-control" />
+	  <input type="text" name="commentaires[]" value="{{horaire[3]}}" class="form-control" readonly />
+	</div>
+      </div>
+      {%- endfor %}
+    </div>
+    <div class="container">
+      <div class="row">
+	<div class="form-group">
+	  <select class="selectpicker" name="jour" required>
+	    <option value="0">lundi</option>
+	    <option value="1">mardi</option>
+	    <option value="2">mercredi</option>
+	    <option value="3">jeudi</option>
+	    <option value="4">vendredi</option>
+	  </select>
+	  <div class="form-group">
+	    <div class='input-group date' id='datetimepicker1'>
+	      <input name="debut" id="debut" type='text' placeholder="début" class="form-control" />
+	      <span class="input-group-addon">
+		<span class="glyphicon glyphicon-calendar"></span>
+	      </span>
+	    </div>
+	  </div>
+	</div>
+	<div class="form-group">
+	  <div class='input-group date' id='datetimepicker2'>
+	    <input name="fin" id="fin" type='text' placeholder="fin" class="form-control" />
+	    <span class="input-group-addon">
+              <span class="glyphicon glyphicon-calendar"></span>
+	    </span>
+	  </div>
+	</div>    
+	<script type="text/javascript">
+    	  $(function () {
+	      $('#datetimepicker1').datetimepicker({format: 'HH:mm'});
+	      $('#datetimepicker2').datetimepicker({format: 'HH:mm'});
+	  });
+	</script>
+	<input type="text" id="commentaire" name="commentaire" placeholder="commentaire" class="form-control"/>
+	<button type="submit" class="btn btn-success" name="submit" value="add">Ajouter</button>
+      </div>
+    </div>    
     <br/>
-     <button type="submit" class="btn btn-success" name="submit" value="record">Enregistrer</button>
+    <button type="submit" class="btn btn-success" name="submit" value="record">Enregistrer</button>
   </form>
 </div>
 {% endblock %}

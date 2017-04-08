@@ -3,6 +3,9 @@ from datetime import datetime
 from flask import render_template, request, redirect, flash,url_for
 from app.models.bann import Enfant, Contrat
 from app import app, db
+import locale
+import calendar
+locale.setlocale(locale.LC_ALL, 'fr_FR.UTF-8')
 
 @app.route('/', methods=['GET'])
 def index():
@@ -46,11 +49,25 @@ def test_horaire():
     
     if request.method == 'POST':
         if request.form['submit'] == 'add':
-            horaires = []
-            for horaire in request.form.getlist('horaire[]'):
-                horaires.append(str(horaire))
-            horaires.append(request.form['new_horaire'])
-            return render_template('horaire.html', horaires = horaires)
+            horaires = []            
+            for horaire in zip(request.form.getlist('jours[]'),
+                               request.form.getlist('debuts[]'),
+                               request.form.getlist('fins[]'),
+                               request.form.getlist('commentaires[]')):
+                tmp = []
+                tmp.append(int(horaire[0]))
+                tmp.append(datetime.strptime(horaire[1], '%H:%M'))
+                tmp.append(datetime.strptime(horaire[2], '%H:%M'))
+                tmp.append(horaire[3])
+                horaires.append(tmp)
+            new_horaire = []
+            new_horaire.append(int(request.form['jour']))
+            new_horaire.append(datetime.strptime(request.form['debut'], '%H:%M'))
+            new_horaire.append(datetime.strptime(request.form['fin'], '%H:%M'))
+            new_horaire.append(request.form['commentaire'])
+            horaires.append(new_horaire)
+            days_week = list(calendar.day_name)
+            return render_template('horaire.html', horaires = horaires, days_week = days_week)
         else:
             return '<h1>Hello World</h1><br />'+request.form['submit']
     else:
