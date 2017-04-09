@@ -72,3 +72,10 @@ def test_horaire():
             return '<h1>Hello World</h1><br />'+request.form['submit']
     else:
         return render_template('horaire.html')
+
+@app.route('/ajout-contrat', methods=['GET', 'POST'])
+def add_contract():
+    if request.method == 'POST':
+        return render_template('new-contract.html')
+    else:
+        return render_template('new-contract.html', enfants=Enfant.query.all())

@@ -5,57 +5,79 @@
 <div class="row">
   <form action="" method=post class="form-inline">
     <div class="container">
-      {%- for horaire in horaires %}
-      <div class="row">
-	<div class="form-group">
-	  <input type="text" value="{{days_week[horaire[0]]}}" class="form-control" readonly />
-	  <input type="hidden" name="jours[]" value="{{horaire[0]}}" readonly />
-	  <input type="text" name="debuts[]" value="{{horaire[1].strftime('%H:%M')}}" class="form-control" />
-	  <input type="text" name="fins[]" value="{{horaire[2].strftime('%H:%M')}}" class="form-control" />
-	  <input type="text" name="commentaires[]" value="{{horaire[3]}}" class="form-control" readonly />
-	</div>
-      </div>
-      {%- endfor %}
+      <table class="table table-striped">
+	<thead>
+	  <tr>
+            <th>Jour</th>
+            <th>début</th>
+            <th>fin</th>
+	    <th>Commentaire</th>
+	  </tr>
+	</thead>
+	<tbody>
+	  {%- for horaire in horaires %}
+	  <tr>
+	    <td><input type="text" value="{{days_week[horaire[0]]}}" class="form-control" readonly /></td>
+	    <input type="hidden" name="jours[]" value="{{horaire[0]}}" readonly />
+	    <td><input type="text" name="debuts[]" value="{{horaire[1].strftime('%H:%M')}}" class="form-control" /></td>
+	    <td><input type="text" name="fins[]" value="{{horaire[2].strftime('%H:%M')}}" class="form-control" /></td>
+	    <td><input type="text" name="commentaires[]" value="{{horaire[3]}}" class="form-control" /></td>
+	  </tr>
+	  {%- endfor %}
+	</tbody>
+      </table>
     </div>
     <div class="container">
-      <div class="row">
-	<div class="form-group">
-	  <select class="selectpicker" name="jour" required>
-	    <option value="0">lundi</option>
-	    <option value="1">mardi</option>
-	    <option value="2">mercredi</option>
-	    <option value="3">jeudi</option>
-	    <option value="4">vendredi</option>
-	  </select>
-	  <div class="form-group">
-	    <div class='input-group date' id='datetimepicker1'>
-	      <input name="debut" id="debut" type='text' placeholder="début" class="form-control" />
-	      <span class="input-group-addon">
-		<span class="glyphicon glyphicon-calendar"></span>
-	      </span>
+      <div class="panel panel-success">
+	<div class="panel-heading">Nouvel horaire</div>
+	<div class="panel-body">
+	  <div class="container">
+	    <div class="row">
+	      <div class="form-group">
+		<select class="selectpicker" name="jour" required>
+		  <option value="0">lundi</option>
+		  <option value="1">mardi</option>
+		  <option value="2">mercredi</option>
+		  <option value="3">jeudi</option>
+		  <option value="4">vendredi</option>
+		</select>
+		<div class="form-group">
+		  <div class='input-group date' id='datetimepicker1'>
+		    <input name="debut" id="debut" type='text' placeholder="début" class="form-control" />
+		    <span class="input-group-addon">
+		      <span class="glyphicon glyphicon-calendar"></span>
+		    </span>
+		  </div>
+		</div>
+	      </div>
+	      <div class="form-group">
+		<div class='input-group date' id='datetimepicker2'>
+		  <input name="fin" id="fin" type='text' placeholder="fin" class="form-control" />
+		  <span class="input-group-addon">
+		    <span class="glyphicon glyphicon-calendar"></span>
+		  </span>
+		</div>
+	      </div>    
+	      <script type="text/javascript">
+    		$(function () {
+		    $('#datetimepicker1').datetimepicker({format: 'HH:mm'});
+		    $('#datetimepicker2').datetimepicker({format: 'HH:mm'});
+		});
+	      </script>
+	      <input type="text" id="commentaire" name="commentaire" placeholder="commentaire" class="form-control"/>
+	      <button type="submit" class="btn btn-success" name="submit" value="add">Ajouter</button>
 	    </div>
 	  </div>
 	</div>
-	<div class="form-group">
-	  <div class='input-group date' id='datetimepicker2'>
-	    <input name="fin" id="fin" type='text' placeholder="fin" class="form-control" />
-	    <span class="input-group-addon">
-              <span class="glyphicon glyphicon-calendar"></span>
-	    </span>
-	  </div>
-	</div>    
-	<script type="text/javascript">
-    	  $(function () {
-	      $('#datetimepicker1').datetimepicker({format: 'HH:mm'});
-	      $('#datetimepicker2').datetimepicker({format: 'HH:mm'});
-	  });
-	</script>
-	<input type="text" id="commentaire" name="commentaire" placeholder="commentaire" class="form-control"/>
-	<button type="submit" class="btn btn-success" name="submit" value="add">Ajouter</button>
       </div>
-    </div>    
+    </div>
     <br/>
-    <button type="submit" class="btn btn-success" name="submit" value="record">Enregistrer</button>
+    <div class="form-group">        
+      <!-- <div class="col-sm-offset-2 col-sm-10"> -->
+      <div class="col-sm-offset-4">
+	<button type="submit" class="btn btn-success" name="submit" value="record">Enregistrer</button>
+      </div>
+    </div>
   </form>
 </div>
 {% endblock %}
