@@ -67,15 +67,26 @@ def test_horaire():
             new_horaire.append(request.form['commentaire'])
             horaires.append(new_horaire)
             days_week = list(calendar.day_name)
-            return render_template('horaire.html', horaires = horaires, days_week = days_week)
+            return render_template('horaire.html', horaires = horaires, days_week = days_week, selected_contrat=int(request.form['contrat']), contrats=Contrat.query.filter_by(etat='actif'))
         else:
             return '<h1>Hello World</h1><br />'+request.form['submit']
     else:
-        return render_template('horaire.html')
+        return render_template('horaire.html', contrats=Contrat.query.filter_by(etat='actif'))
 
 @app.route('/ajout-contrat', methods=['GET', 'POST'])
 def add_contract():
     if request.method == 'POST':
-        return render_template('new-contract.html')
+        contrat = Contrat()
+        contrat.enfant_id = int(request.form['enfant'])
+        contrat.anniversaire = datetime.strptime(request.form['anniversaire'], '%d/%m/%Y')
+        contrat.nb_semaine = int(request.form['nb_semaine'])
+        contrat.salaire = float(request.form['salaire'])
+        contrat.indemnite = float(request.form['indemnite'])
+        contrat.etat = 'actif'
+        db.session.add(contrat)
+        db.session.commit()
+        flash('Ajout de contrat réussi')
+        return redirect(url_for('add_contract'))
     else:
-        return render_template('new-contract.html', enfants=Enfant.query.all())
+        date_now = datetime.now().strftime('%d/%m/%Y')
+        return render_template('new-contract.html', enfants=Enfant.query.all(), date_now=date_now)

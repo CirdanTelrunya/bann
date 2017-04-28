@@ -3,8 +3,18 @@
 {% block content %}
 
 <div class="row">
-  <form action="" method=post class="form-inline">
+  <form action="" method=post class="form-inline">    
     <div class="container">
+      <div class="form-group">
+	<label class="control-label col-sm-4" for="contrat">Contrat&nbsp;:</label>
+	<div class="col-sm-8">
+          <select class="selectpicker" id="contrat" name="contrat" required>
+	    {% for contrat in contrats %}
+            <option value="{{ contrat.id }}" {% if selected_contrat == contrat.id %} selected {% endif %}>{{ contrat.id }}&nbsp;{{contrat.enfant.prenom}}&nbsp;{{contrat.enfant.nom}}&nbsp;({{contrat.anniversaire}})</option>
+            {% endfor %}
+	  </select>
+	</div>
+      </div>
       <table class="table table-striped">
 	<thead>
 	  <tr>
@@ -12,16 +22,17 @@
             <th>début</th>
             <th>fin</th>
 	    <th>Commentaire</th>
+	    <th style="padding: 0; border: none;"></th>
 	  </tr>
 	</thead>
 	<tbody>
 	  {%- for horaire in horaires %}
 	  <tr>
-	    <td><input type="text" value="{{days_week[horaire[0]]}}" class="form-control" readonly /></td>
-	    <input type="hidden" name="jours[]" value="{{horaire[0]}}" readonly />
+	    <td><input type="text" value="{{days_week[horaire[0]]}}" class="form-control" readonly /></td>	    
 	    <td><input type="text" name="debuts[]" value="{{horaire[1].strftime('%H:%M')}}" class="form-control" /></td>
 	    <td><input type="text" name="fins[]" value="{{horaire[2].strftime('%H:%M')}}" class="form-control" /></td>
 	    <td><input type="text" name="commentaires[]" value="{{horaire[3]}}" class="form-control" /></td>
+	    <td style="padding: 0; border: none;"><input type="hidden" name="jours[]" value="{{horaire[0]}}" readonly /></td>
 	  </tr>
 	  {%- endfor %}
 	</tbody>

@@ -21,7 +21,10 @@ class Contrat (db.Model):
     id = Column('id', Integer, primary_key = True)
     enfant_id = Column('enfant_id', Integer, ForeignKey('enfants.id'))
     anniversaire = Column('anniversaire', Date)
-
+    nb_semaine = Column('nb_semaine', Integer)
+    salaire = Column('salaire', Float)
+    indemnite = Column('indemnite', Float)
+    etat = Column('etat', String)
     enfant = relationship('Enfant', foreign_keys=enfant_id)
 
 class Horaire (db.Model):

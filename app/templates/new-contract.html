@@ -2,7 +2,7 @@
 {% block content %}
 <div class="container">
   <h2>Ajout d'un contrat</h2>
-  <form class="form-horizontal">
+  <form class="form-horizontal" method=post>
     <div class="form-group">
       <label class="control-label col-sm-4" for="enfant">Enfant&nbsp;:</label>
       <div class="col-sm-8">
@@ -14,9 +14,9 @@
       </div>
     </div>
     <div class="form-group">
-      <label class="control-label col-sm-4" for="nbWeeks">Nombre de semaine de garde&nbsp;:</label>
+      <label class="control-label col-sm-4" for="nb_semaine">Nombre de semaine de garde&nbsp;:</label>
       <div class="col-sm-1">
-	<input type="number" min="0" max="52" name="nbWeeks" id="nbWeeks" class="form-control" />
+	<input type="number" min="0" max="52" name="nb_semaine" id="nb_semaine" class="form-control" value="45" required/>
       </div>
     </div>
     <div class="form-group">
@@ -25,7 +25,7 @@
       <div class="form-group">
 	<div class="col-sm-2">
 	  <div class='input-group date' id='datetimepicker1'>
-	    <input name="anniversaire" id="anniversaire" type='text' class="form-control" />
+	    <input name="anniversaire" id="anniversaire" type='text' class="form-control" value="{{date_now}}" />
 	    <span class="input-group-addon">
 	      <span class="glyphicon glyphicon-calendar"></span>
 	    </span>
@@ -41,14 +41,14 @@
     <div class="form-group">
       <label class="control-label col-sm-4" for="salaire">Salaire horaire net de base&nbsp;:</label>
       <div class="input-group col-sm-2">
-	<input type="text" name="salaire" id="salaire" class="form-control" />
+	<input type="text" name="salaire" id="salaire" class="form-control" value="4.00" required />
 	<span class="input-group-addon">€/heure</span>
       </div>
     </div>
     <div class="form-group">
       <label class="control-label col-sm-4" for="indemnite">Indemnités d’entretien&nbsp;:</label>
       <div class="input-group col-sm-2">
-	<input type="text" name="indemnite" id="indemnite" class="form-control" />
+	<input type="text" name="indemnite" id="indemnite" class="form-control" value="3.00" required />
 	<span class="input-group-addon">€/jour</span>
       </div>
     </div>
