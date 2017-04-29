@@ -1,0 +1,187 @@
+{% extends 'layout.html' %}
+{% from 'macros.html' import icon %}
+{% block content %}
+
+<div class="row">
+  <form action="" method=get class="form-inline">    
+    <div class="container">
+      <div class="form-group">
+	<label class="control-label col-sm-4" for="contrat">Contrat&nbsp;:</label>
+	<div class="col-sm-8">
+          <select class="selectpicker" id="contrat" name="contrat_id" required>
+	    {% for contrat in contrats %}
+            <option value="{{ contrat.id }}" {% if selected_contrat == contrat.id %} selected {% endif %}>{{ contrat.id }}&nbsp;{{contrat.enfant.prenom}}&nbsp;{{contrat.enfant.nom}}&nbsp;({{contrat.anniversaire}})</option>
+            {% endfor %}
+	  </select>
+	</div>
+      </div>
+      <div class="form-group">        
+	<div class="col-sm-offset-4">
+	  <button type="submit" class="btn btn-success" name="submit" value="display">Voir</button>
+	</div>
+      </div>
+    </div>    
+  </form>
+</div>
+{% if contrat is defined %}
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="contract-title">
+    	<h2>Contrat</h2><h4 class="pull-right">Numéro&nbsp;: {{contrat.id}}</h4>
+      </div>
+      <hr>
+      <div class="row">
+    	<div class="col-xs-6">
+  	  <div class="panel panel-default">
+	    <div class="panel-body">
+    	      <h4>Enfant&nbsp;: {{contrat.enfant.prenom}} {{contrat.enfant.nom}}</h4><br>
+    	      La date de début l’accueil et du contrat&nbsp;: {{contrat.anniversaire.strftime('%A %d %B %Y')}}<br>
+	      {% if contrat.nb_semaine > 46 %}
+    	      Mensualisation sur &laquo;une année complète&raquo; (52 semaines)<br>
+	      {% else %}
+	      Mensualisation sur &laquo;une année incomplète&raquo;<br>
+	      Correspondant à {{contrat.nb_semaine}} semaines de garde programmées.<br>
+	      {% endif %}
+  	    </div>
+	  </div>
+    	</div>
+    	<div class="col-xs-6 text-right">
+	  <div class="panel panel-default">
+	    <div class="panel-body">
+	      <h4>Rémunération</h4>
+	      Salaire horaire net de base&nbsp;: {{contrat.salaire}} €<br />
+	      Indemnités d’entretien&nbsp;: {{contrat.indemnite}} €/jour<br />	      
+    	    </div>
+	  </div>
+    	</div>
+      </div> <!-- row -->
+      <div class="row">
+    	<div class="col-md-12">
+    	  <div class="panel panel-default">
+    	    <div class="panel-heading">
+    	      <h3 class="panel-title"><strong>Planning hebdomadaire</strong></h3>
+    	    </div>
+    	    <div class="panel-body">
+    	      <div class="table-responsive">
+    		<table class="table table-condensed">
+		  <thead>
+		    <tr>
+		      <th>Jour</th>
+		      <th>début</th>
+		      <th>fin</th>
+		      <th>durée</th>
+		      <th>Commentaire</th>
+		    </tr>
+		  </thead>
+		  <tbody>
+		    {%- for horaire in horaires %}
+		    <tr>
+		      <td>{{horaire[0]}}</td>
+		      <td>{{horaire[1]}}</td>
+		      <td>{{horaire[2]}}</td>
+		      <td>{{horaire[3]}}</td>
+		      <td>{{horaire[4]}}</td>
+		    </tr>		    
+		    {%- endfor %}
+		  </tbody>
+		</table>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+      </div> <!-- row -->
+      <div class="row">
+    	<div class="col-md-12">
+    	  <div class="panel panel-default">
+    	    <div class="panel-heading">
+    	      <h3 class="panel-title"><strong>Résumé et calculs</strong></h3>
+    	    </div>
+    	    <div class="panel-body">
+	      <style>
+		td.upper_line { border-top:solid 1px black; }
+		table.fraction { text-align: center; vertical-align: middle;
+		margin-top:0.5em; margin-bottom:0.5em; line-height: 2em; }
+	      </style>
+	      <div class="row">
+		Soit {{accueil_hebdomadaire[0]}} heures ou {{accueil_hebdomadaire[1]}} heures et {{accueil_hebdomadaire[2]}} minutes d’accueil par semaine.
+	      </div>	      
+	      <div class="row">
+		<table class="fraction" cellpadding="0" cellspacing="0">
+		  <tbody>
+		    <tr>
+		      <td rowspan="2" nowrap="nowrap">Salaire mensuel net de base =&nbsp;  </td>
+		      <td nowrap="nowrap">{{contrat.salaire}} x {{accueil_hebdomadaire[0]}} x {{contrat.nb_semaine}}&nbsp;</td>
+		      <td rowspan="2" nowrap="nowrap" >&nbsp;=&nbsp;</td>
+		      <td nowrap="nowrap">Salaire x Accueil x Semaines</td>
+		      <td rowspan="2" nowrap="nowrap">&nbsp;=&nbsp;{{salaire_mensuel}}&nbsp;€</td>
+		    </tr>
+		    <tr>
+		      <td class="upper_line">12</td>
+		      <td class="upper_line">12</td>
+		    </tr>
+		  </tbody>
+		</table>
+	      </div> <!-- row -->
+	      <div class="row">		
+		  <table class="fraction" cellpadding="0" cellspacing="0">
+		    <tbody>
+		      <tr>
+			<td rowspan="2" nowrap="nowrap">Le nombre d’heures normales mensualisées =&nbsp;arrondis<sup>(1)</sup>(</td>
+			<td nowrap="nowrap">{{accueil_hebdomadaire[0]}} x {{contrat.nb_semaine}}&nbsp;</td>
+			<td rowspan="2" nowrap="nowrap" >)&nbsp;=&nbsp;arrondis<sup>(1)</sup>(</td>
+			<td nowrap="nowrap">Accueil x Semaines</td>
+			<td rowspan="2" nowrap="nowrap">)&nbsp;=&nbsp;{{heures_normal_mensuel}} heures</td>
+		      </tr>
+		      <tr>
+			<td class="upper_line">12</td>
+			<td class="upper_line">12</td>
+		      </tr>
+		    </tbody>
+		  </table>
+		<span class="pull-right"><small>1) arrondis : si la décimale est inférieure à 0.5, vous arrondissez à l'entier inférieur, sinon le supérieure</small></span>
+	      </div> <!-- row -->
+	      <div class="row">
+		<table class="fraction" cellpadding="0" cellspacing="0">
+		  <tbody>
+		      <tr>
+			<td rowspan="2" nowrap="nowrap">Le nombre de jours d’activité mensualisés =&nbsp;arrondis<sup>(2)</sup>(</td>
+			<td nowrap="nowrap">{{nb_jours}} x {{contrat.nb_semaine}}&nbsp;</td>
+			<td rowspan="2" nowrap="nowrap" >)&nbsp;=&nbsp;arrondis<sup>(2)</sup>(</td>
+			<td nowrap="nowrap">Jours x Semaines</td>
+			<td rowspan="2" nowrap="nowrap">)&nbsp;=&nbsp;{{jours_activite}} jours</td>
+		      </tr>
+		      <tr>
+			<td class="upper_line">12</td>
+			<td class="upper_line">12</td>
+		      </tr>
+		  </tbody>
+		</table>
+		<span class="pull-right"><small>2) arrondis : le nombre de jours d’activité à déclarer doit être arrondi à l’entier supérieur.</small></span>		
+	      </div> <!-- row -->
+	      <div class="row">
+		<table class="fraction" cellpadding="0" cellspacing="0">
+		  <tbody>
+		      <tr>
+			<td rowspan="2" nowrap="nowrap">Nombre d’heures normales =&nbsp;arrondis<sup>(1)</sup>(</td>
+			<td nowrap="nowrap">{{salaire_mensuel}}&nbsp;</td>
+			<td rowspan="2" nowrap="nowrap" >)&nbsp;=&nbsp;arrondis<sup>(1)</sup>(</td>
+			<td nowrap="nowrap">Salaire</td>
+			<td rowspan="2" nowrap="nowrap">)&nbsp;=&nbsp;{{heures_normales}} heures</td>
+		      </tr>
+		      <tr>
+			<td class="upper_line">{{contrat.salaire}}</td>
+			<td class="upper_line">Taux</td>
+		      </tr>
+		  </tbody>
+		</table>
+	      </div> <!-- row -->
+	    </div>
+	  </div>
+	</div>
+      </div> <!-- row -->      
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

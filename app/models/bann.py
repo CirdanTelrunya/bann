@@ -26,16 +26,19 @@ class Contrat (db.Model):
     indemnite = Column('indemnite', Float)
     etat = Column('etat', String)
     enfant = relationship('Enfant', foreign_keys=enfant_id)
+    horaires = relationship('Horaire', backref='contrat',
+                            lazy='dynamic')
 
 class Horaire (db.Model):
     __tablename__ = "horaires"
     id = Column('id', Integer, primary_key = True)
     # Unknown SQL type: 'tinyint' 
-    jour = Column('jour', String)
+    jour = Column('jour', Integer)
     debut = Column('debut', DateTime)
     fin = Column('fin', DateTime)
+    commentaire = Column('commentaire', String)
     contrat_id = Column('contrat_id', Integer, ForeignKey('contrats.id'))
 
-    contrat = relationship('Contrat', foreign_keys=contrat_id)
+    # contrat = relationship('Contrat', foreign_keys=contrat_id)
 
 # end
