@@ -145,3 +145,49 @@ def list_contract():
     else:
         return render_template('list-contract.html', contrats=Contrat.query.filter_by(etat='actif'))
                                
+@app.route('/ajout-journee-travail', methods=['GET'])
+def add_working_day():    
+    return render_template('new-working-day.html')
+
+@app.route('/now', methods=['GET'])
+def display_now():
+    contrat_id = request.args.get('contrat_id')
+    date_now = datetime.now().strftime('%d/%m/%Y %H:%M')
+    return '<h1>Hello World</h1>Contrat = '+contrat_id+' '+date_now+' <a href="/liste-contrat">plop</a>'
+
+@app.route('/absences-contrat', methods=['GET'])
+def absences_contract():
+    contrat_id = request.args.get('contrat_id')
+    if contrat_id is not None:
+        days_week = list(calendar.day_name)
+        contrat=Contrat.query.filter_by(id=contrat_id).first()
+        accueil_hebdomadaire = timedelta()
+        jours = set()
+        horaires = []
+        for horaire in contrat.horaires:
+            tmp = []
+            tmp.append(days_week[horaire.jour])
+            tmp.append(horaire.debut.strftime('%H:%M'))
+            tmp.append(horaire.fin.strftime('%H:%M'))
+            delta = (horaire.fin - horaire.debut)
+            hours, remainder = divmod(delta.total_seconds(), 3600)
+            minutes, seconds = divmod(remainder, 60)
+            tmp.append(str(int(hours))+'h'+str(int(minutes)))
+            tmp.append(horaire.commentaire);
+            horaires.append(tmp)
+            accueil_hebdomadaire += delta
+            jours.add(horaire.jour)
+        hours, remainder = divmod(accueil_hebdomadaire.total_seconds(), 3600)
+        minutes, seconds = divmod(remainder, 60)
+        accueil_hebdomadaire = [accueil_hebdomadaire.total_seconds() / 3600, int(hours), int(minutes)]
+        salaire_mensuel = (contrat.salaire * accueil_hebdomadaire[0] * float(contrat.nb_semaine)) / 12.0
+        heures_mensuel = (accueil_hebdomadaire[0] * float(contrat.nb_semaine)) / 12.0
+        nb_absence = float(request.args.get('nb_heures_absence')) * 3600.0 + float(request.args.get('nb_mins_absence')) * 60.0
+        nb_absence = nb_absence / 3600
+        salaire_final = salaire_mensuel - ((salaire_mensuel * nb_absence) / heures_mensuel)
+        
+        return render_template('absences-contract.html', contrats=Contrat.query.filter_by(etat='actif'), selected_contrat=contrat.id, contrat=contrat, salaire_mensuel=salaire_mensuel, heures_mensuel=heures_mensuel, nb_absence=nb_absence, salaire_final=salaire_final)
+    
+    else:
+        return render_template('absences-contract.html', contrats=Contrat.query.filter_by(etat='actif'))
+    

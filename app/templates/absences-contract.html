@@ -1,0 +1,77 @@
+{% extends 'layout.html' %}
+{% from 'macros.html' import icon %}
+{% block content %}
+
+<div class="row">
+  <form action="" method=get class="form-inline">    
+    <div class="container">
+      <div class="form-group">
+	<label class="control-label col-sm-4" for="contrat">Contrat&nbsp;:</label>
+	<div class="col-sm-8">
+          <select class="selectpicker" id="contrat" name="contrat_id" required>
+	    {% for contrat in contrats %}
+            <option value="{{ contrat.id }}" {% if selected_contrat == contrat.id %} selected {% endif %}>{{ contrat.id }}&nbsp;{{contrat.enfant.prenom}}&nbsp;{{contrat.enfant.nom}}&nbsp;({{contrat.anniversaire}})</option>
+            {% endfor %}
+	  </select>
+	</div>
+      </div>
+      <div class="form-group">
+	<label class="control-label col-sm-4" for="nb_absence">Nombre d'heure d'absence&nbsp;:</label>
+	<div class="col-sm-1">
+	  <input type="number" min="0" max="100" name="nb_heures_absence" id="nb_heures_absence" class="form-control" value="1" required/>
+	  <input type="number" min="0" max="59" name="nb_mins_absence" id="nb_mins_absence" class="form-control" value="0" required />
+	</div>
+      </div>
+      <div class="form-group">        
+	<div class="col-sm-offset-4">
+	  <button type="submit" class="btn btn-success" name="submit" value="display">Voir</button>
+	</div>
+      </div>
+    </div>    
+  </form>
+</div>
+{% if contrat is defined %}
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="contract-title">
+    	<h2>Contrat</h2><h4 class="pull-right">Numéro&nbsp;: {{contrat.id}}</h4>
+      </div>
+      <hr>
+      <div class="row">
+    	<div class="col-xs-6">
+  	  <div class="panel panel-default">
+	    <div class="panel-body">
+    	      <h4>Enfant&nbsp;: {{contrat.enfant.prenom}} {{contrat.enfant.nom}}</h4><br>
+    	      <table class="fraction" cellpadding="0" cellspacing="0">
+		  <tbody>
+		    <tr>
+		      <td>Salaire mensuel&nbsp;:</td>
+		      <td class="text-right">{{salaire_mensuel}}&nbsp;€</td>
+		    </tr>
+		    <tr>
+		      <td>Heures mensuelles&nbsp;:</td>
+		      <td class="text-right">{{heures_mensuel}}&nbsp;h</td>
+		  </tbody>
+	      </table>
+  	    </div>
+	  </div>
+    	</div>
+      </div> <!-- row -->
+      <div class="row">
+	<div class="col-md-12">
+    	  <div class="panel panel-default">
+	    <header class="panel-heading">
+	      <h5 class="panel-title">Salaire du mois&nbsp;:</h5>
+	    </header>
+	    <div class="panel-body">
+	      {{salaire_mensuel}} - [({{salaire_mensuel}} x {{nb_absence}}) / {{heures_mensuel}}] = {{salaire_final}}
+	    </div>
+	  </div>
+	</div>
+      </div> <!-- row -->
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endblock %}
